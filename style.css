@@ -1,0 +1,861 @@
+:root {
+    --primary-color: #00ff99; /* Electric Green / Cyber */
+    --secondary-color: #333333; /* Dark Gray for Card Background */
+    --text-light: #ffffff;
+    --text-dark: #0a0a0a;
+    --background-dark: #121212;
+    --font-heading: 'Inter', sans-serif;
+    --alert-color: #ff3333; /* Hacking/Alert Red */
+    --glitch-red: #ff0000;
+    --glitch-blue: #0000ff;
+    --card-border-color: rgba(0, 255, 153, 0.4);
+    --warning-color: #ff9900;
+}
+
+/* Basic Reset and Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-heading);
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    overflow-x: hidden; 
+}
+
+/* --- SCROLL FIX (Continuous Scroll on ALL Devices) --- */
+main { 
+    height: auto; 
+    overflow-y: auto; 
+}
+main > section {
+    min-height: 100vh; /* Retain full height for aesthetic spacing */
+    scroll-snap-align: none; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* --- Content Section Base Styling --- */
+.content-section {
+    padding: 80px 5vw;
+    text-align: center;
+    position: relative;
+    z-index: 10; 
+}
+
+.content-section h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-weight: 900;
+}
+
+.section-subtitle {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    color: #ffffff; /* Pure white for max contrast */
+    margin-bottom: 50px;
+}
+
+/* --- HERO SECTION VIDEO BACKGROUND & OVERLAY (Contrast Fix) --- */
+.hero-section {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+    /* FIX 1: Add dark overlay via box-shadow to enhance contrast over the video */
+    box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.6); /* 60% Black overlay for high contrast */
+    background-color: #121212; /* Fallback color */
+}
+
+#hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 0; /* Ensures video is at the very back */
+    transform: translateX(-50%) translateY(-50%);
+    object-fit: cover;
+    opacity: 1; 
+}
+
+/* Canvas is slightly elevated over the video but behind the content */
+#neural-mesh-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1; 
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 5;
+    max-width: 800px;
+    padding: 2rem 1.5rem; 
+}
+
+/* --- Header & Navigation (Standard Styles) omitted for brevity) --- */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 5vw; 
+    position: fixed; 
+    width: 100%;
+    z-index: 100;
+    backdrop-filter: blur(5px); 
+    background: rgba(18, 18, 18, 0.7);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    letter-spacing: -1px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links {
+    display: flex;
+}
+
+.nav-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    margin-left: 1.5rem; 
+    font-size: 1rem;
+    font-weight: 500;
+    padding-bottom: 3px;
+    position: relative;
+}
+
+/* Interactive Animation: Cyber-Glow Underline */
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    box-shadow: 0 0 5px var(--primary-color);
+    transition: all 0.3s ease-out;
+    transform: translateX(-50%);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* Enroll Now CTA Button (Header) */
+.cta-nav {
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-left: 2rem; 
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+.cta-nav:hover {
+    background-color: var(--primary-color);
+    color: var(--background-dark);
+    box-shadow: 0 0 15px var(--primary-color);
+}
+
+/* --- HACK CHALLENGE FEEDBACK STYLES (omitted for brevity) --- */
+
+.nav-toggle-btn {
+    display: none; 
+    background: none;
+    border: none;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    cursor: pointer;
+    margin-right: 1rem;
+    padding: 0;
+    z-index: 101; 
+}
+
+.nav-toggle-btn span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary-color);
+    margin: 6px 0;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Alert Pulse Animation for failed/successful hack attempt */
+@keyframes alert-pulse {
+    0% { transform: scaleX(1); }
+    50% { transform: scaleX(0.8); }
+    100% { transform: scaleX(1); }
+}
+
+.nav-toggle-btn.hack-alert span {
+    background-color: var(--alert-color);
+    box-shadow: 0 0 10px var(--alert-color);
+    animation: alert-pulse 0.2s 3 ease-in-out;
+}
+
+
+/* Success Message Bar */
+#hack-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 255, 153, 0.9);
+    color: var(--background-dark);
+    text-align: center;
+    padding: 10px 0;
+    font-weight: 700;
+    z-index: 1000;
+    transform: translateY(-100%); 
+    transition: transform 0.4s ease-out;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+}
+
+#hack-message.show {
+    transform: translateY(0);
+}
+
+
+/* --- GLITCH HEADLINE STYLES --- */
+.animated-headline-container {
+    font-size: clamp(2.5rem, 8vw, 6rem); 
+    font-weight: 900;
+    line-height: 1.1em; 
+    margin-bottom: 1rem; 
+    position: relative;
+    color: var(--text-light); 
+}
+
+/* Glitch Target: MASTER AI. */
+.glitch-title {
+    display: block;
+    color: var(--primary-color); 
+    position: relative;
+    
+    /* Base Shadow to create static RGB separation */
+    text-shadow: 
+        0.05em 0 0 var(--glitch-red), 
+        -0.05em 0 0 var(--glitch-blue); 
+    
+    /* Apply horizontal translation animation */
+    animation: master-glitch-translate 0.6s infinite alternate;
+}
+
+/* Glitch Pseudo-Elements for scanline/clip effect on MASTER AI. */
+.glitch-title::before,
+.glitch-title::after {
+    content: attr(data-text); 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3; 
+    color: var(--text-light); 
+    text-shadow: none;
+    
+    /* Initially hide to only show the effect when animating */
+    clip: rect(0, 0, 0, 0); 
+}
+
+/* Blue Scanline Layer */
+.glitch-title::before {
+    text-shadow: 0.005em 0 0 var(--glitch-blue);
+    animation: master-glitch-scan 3s infinite linear alternate-reverse;
+}
+/* Red Scanline Layer */
+.glitch-title::after {
+    text-shadow: -0.005em 0 0 var(--glitch-red);
+    animation: master-glitch-scan 4s infinite linear alternate-reverse;
+}
+
+/* Normal Text: HACK THE FUTURE. (Clean White) */
+.glitch-subtitle {
+    display: block;
+    color: var(--text-light); 
+    position: relative;
+    text-shadow: none; 
+}
+
+/* --- GLITCH KEYFRAMES (Stable, Responsive) omitted for brevity) --- */
+
+/* Horizontal Translation (Subtle layer shift) */
+@keyframes master-glitch-translate {
+    0% { transform: translate(0.005em, 0.005em); }
+    50% { transform: translate(-0.005em, -0.005em); }
+    100% { transform: translate(0.005em, 0.005em); }
+}
+
+/* Vertical Clipping/Scanline Roll */
+@keyframes master-glitch-scan {
+    0% { clip: rect(0.1em, 9999px, 0.3em, 0); }
+    10% { clip: rect(0.4em, 9999px, 0.6em, 0); }
+    20% { clip: rect(0.7em, 9999px, 0.8em, 0); }
+    30% { clip: rect(1em, 9999px, 1.1em, 0); }
+    40% { clip: rect(0.1em, 9999px, 0.2em, 0); }
+    100% { clip: rect(1.5em, 9999px, 1.6em, 0); }
+}
+
+/* Flicker JS element must be targeted for the hack game feedback */
+.animated-headline-container.flicker .glitch-title, 
+.animated-headline-container.flicker .glitch-subtitle {
+    opacity: 0.95; 
+    transition: opacity 0.05s ease-out;
+}
+
+
+/* --- READABILITY FIXES (Tagline & Stats) --- */
+.tagline {
+    font-size: clamp(1rem, 4vw, 1.5rem); 
+    color: #ffffff; 
+    margin-bottom: 3rem; 
+    font-weight: 500; 
+}
+
+.stats-ticker {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    gap: 1rem; 
+    justify-content: center;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+    color: #ffffff; 
+}
+
+
+/* --- INTERACTIVE HERO CTA BUTTON (Video Game Effect) --- */
+.primary-cta {
+    display: inline-flex; 
+    align-items: center;
+    gap: 0.5rem; 
+    padding: 1rem 2rem; 
+    background-color: var(--primary-color);
+    color: var(--background-dark);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem; 
+    border-radius: 8px; 
+    overflow: hidden; 
+    position: relative; 
+    transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+    border: 2px solid transparent; 
+    letter-spacing: 0.05em; 
+}
+
+.pulse-effect {
+    animation: pulse 2s infinite cubic-bezier(0.66, 0.0, 0.0, 1.0);
+}
+
+/* Keyframes for Pulse Effect */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 255, 153, 0.4); }
+    70% { box-shadow: 0 0 0 25px rgba(0, 255, 153, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 255, 153, 0); }
+}
+
+
+/* --- COURSES SECTION STYLING (The Matrix Look) --- */
+.course-cards-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.course-card {
+    /* Set alignment for content inside card */
+    text-align: center; 
+    position: relative; /* CRUCIAL: Needed to anchor the badge */
+    
+    background-color: rgba(18, 18, 18, 0.95); /* Very dark background for high contrast */
+    border: 2px solid var(--card-border-color);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 255, 153, 0.1); 
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* --- NEW: Prominent Badge Styles --- */
+.prominent-badge {
+    position: absolute;
+    /* FIX: Adjusted position to pull it further up and left, clearing the title */
+    top: -80px; 
+    left: -80px; 
+    width: 170px; 
+    height: 170px;
+    z-index: 20; 
+    
+    transform-origin: center center;
+    
+    /* Pop-in and Pulse Animation */
+    animation: pop-in-pulse 1s ease-out forwards;
+    opacity: 0; 
+}
+
+.prominent-badge img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Add a continuous, strong glow effect */
+    filter: drop-shadow(0 0 10px var(--warning-color)) drop-shadow(0 0 2px var(--warning-color)); 
+    animation: badge-glow 2s infinite alternate;
+}
+
+@keyframes pop-in-pulse {
+    0% { opacity: 0; transform: scale(0.5) rotate(-5deg); }
+    50% { opacity: 1; transform: scale(1.1) rotate(0deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes badge-glow {
+    from { filter: drop-shadow(0 0 10px var(--warning-color)) brightness(1.2); }
+    to { filter: drop-shadow(0 0 15px var(--warning-color)) brightness(1.4); }
+}
+
+
+/* Card Interaction: Cyber Lift Effect */
+.course-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0, 255, 153, 0.3);
+}
+
+.card-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    /* FIX: Added top padding to push text down from the badge area */
+    padding-top: 50px; 
+    border-bottom: 1px dashed rgba(0, 255, 153, 0.2);
+    text-align: center; /* Center the Title */
+}
+
+.course-tag {
+    font-size: 0.9rem;
+    color: #aaa;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.course-card h3 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+/* --- Card Segment Styling (New Structure) --- */
+.card-segment {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.1);
+    text-align: center; /* Center segment content */
+}
+
+.segment-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    background-color: rgba(0, 255, 153, 0.1); /* Light background for segment title */
+    padding: 4px 8px;
+    display: inline-block;
+    border-radius: 4px;
+}
+
+/* FIX: Emphasize the primary benefit text */
+.primary-benefit {
+    font-weight: 600;
+    color: var(--text-light);
+    line-height: 1.4;
+    margin-bottom: 15px !important;
+}
+
+.segment-content {
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+/* FIX: Align level tag and increase separation */
+.level-tag {
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    display: inline-block;
+    margin-bottom: 15px; 
+}
+
+/* Tag Colors omitted for brevity */
+.level-tag.beginner {
+    background-color: #3f6f3e; 
+    color: #e6ffe6;
+}
+.level-tag.advanced {
+    background-color: #3f5f8f; 
+    color: #e6f7ff;
+}
+.level-tag.expert {
+    background-color: #8f3f3f; 
+    color: #ffe6e6;
+}
+
+/* Feature List Styling (Deep Dive Topics) */
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+    margin-bottom: 0;
+    font-size: 0.9rem;
+    text-align: left; /* Align list items to the left */
+}
+.features-list li {
+    padding: 5px 0;
+    color: #aaa;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+}
+.features-list li::before {
+    content: '\2713'; /* Checkmark symbol */
+    color: var(--primary-color);
+    margin-right: 10px;
+}
+
+/* Secondary CTA Button (Card Button) */
+.secondary-cta {
+    display: inline-block;
+    width: 100%;
+    padding: 12px 0;
+    background: none;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+    margin-top: auto; 
+    text-align: center; /* Center button text */
+    text-transform: uppercase;
+}
+.secondary-cta:hover {
+    background-color: var(--primary-color);
+    color: var(--background-dark);
+    box-shadow: 0 0 10px rgba(0, 255, 153, 0.6);
+}
+
+/* --- BONUS PERK STYLES --- */
+.bonus-perk-container {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(0, 255, 153, 0.3);
+}
+
+.bonus-perk-text {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+    display: block;
+}
+
+.scarcity-tag {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--alert-color); /* Red for urgency */
+    background-color: rgba(255, 0, 0, 0.1);
+    padding: 2px 5px;
+    border-radius: 3px;
+    display: inline-block;
+    text-shadow: 0 0 5px rgba(255, 51, 0, 0.5); /* Subtle inner glow */
+    
+    /* Animation */
+    animation: scarcity-pulse 1.5s infinite alternate;
+}
+
+@keyframes scarcity-pulse {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0.8; transform: scale(1.03); }
+}
+
+
+/* --- ABOUT SECTION --- */
+.about-section {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+/* Instructor Details Styling omitted for brevity */
+.instructor-details {
+    max-width: 800px;
+    margin: 40px auto 30px;
+    padding: 30px;
+    background-color: #1a1a1a;
+    border: 1px solid rgba(0, 255, 153, 0.2);
+    border-radius: 12px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally on small screens */
+}
+
+.instructor-details h3 {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.instructor-bio {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    width: 100%;
+    flex-direction: row; /* Default desktop layout */
+    text-align: left;
+}
+
+.instructor-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 10px rgba(0, 255, 153, 0.4);
+    flex-shrink: 0;
+}
+
+.instructor-bio p {
+    margin-bottom: 15px;
+    color: #ddd;
+    font-size: 1rem;
+    flex-grow: 1;
+}
+
+.social-links {
+    margin-top: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+.social-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.social-link:hover {
+    color: var(--text-light);
+}
+
+.about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.about-content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #ddd;
+}
+
+.about-content strong {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+/* --- FINAL CTA SECTION --- */
+.final-cta-section {
+    background-color: #1a1a1a;
+    padding: 60px 5vw;
+    border-top: 5px solid var(--primary-color);
+    border-bottom: 5px solid var(--primary-color);
+}
+
+
+/* ================================================= */
+/* --- MOBILE-SPECIFIC MEDIA QUERIES --- */
+/* ================================================= */
+
+@media (max-width: 600px) {
+    
+    .main-header {
+        padding: 1rem 1rem;
+    }
+    
+    .nav-toggle-btn {
+        display: block; 
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh; 
+        background: var(--background-dark);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transform: translateX(100%); 
+        transition: transform 0.4s ease-in-out;
+        z-index: 100;
+        padding-top: 50px; 
+    }
+
+    .nav-menu.nav-open {
+        transform: translateX(0);
+    }
+    
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+        margin-bottom: 50px;
+    }
+
+    .nav-links a {
+        font-size: 2rem; 
+        margin: 0;
+        padding: 10px 0;
+    }
+    
+    .cta-nav {
+        margin-left: 0;
+        font-size: 1.2rem;
+        padding: 15px 30px;
+    }
+
+    /* Hamburger Animation to 'X' */
+    .nav-open .nav-toggle-btn span:nth-child(1) {
+        transform: rotate(45deg) translate(8px, 8px);
+    }
+    .nav-open .nav-toggle-btn span:nth-child(2) {
+        opacity: 0;
+    }
+    .nav-open .nav-toggle-btn span:nth-child(3) {
+        transform: rotate(-45deg) translate(8px, -8px);
+    }
+
+    /* Primary CTA Button Adjustments for Mobile */
+    .primary-cta {
+        padding: 0.9rem 1.8rem; 
+        font-size: 1rem;
+        border-radius: 6px;
+        gap: 0.4rem;
+        animation: none; 
+    }
+    
+    .primary-cta:active {
+        transform: translateY(-2px) scale(0.98);
+        box-shadow: 0 0 10px rgba(0, 255, 153, 0.4);
+        border-color: var(--primary-color);
+    }
+    .primary-cta:active .arrow {
+         transform: translateX(3px);
+         color: var(--text-light);
+    }
+    .primary-cta:active::before {
+        left: 100%; 
+        transition: left 0.7s ease-out; 
+    }
+
+    .main-header .logo {
+        flex-grow: 1; 
+        text-align: left;
+    }
+
+    .tagline {
+        margin-bottom: 2rem; 
+    }
+    
+    /* Instructor Bio Stack on Mobile */
+    .instructor-bio {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .instructor-bio p {
+        text-align: center;
+        margin-top: 15px;
+    }
+    
+    .social-links {
+        margin-top: 20px;
+    }
+
+    /* Course Section Mobile Adjustments */
+    .content-section {
+        padding: 50px 1rem; 
+    }
+
+    .section-subtitle {
+        margin-bottom: 30px;
+    }
+    
+    .course-card {
+        padding: 20px;
+    }
+
+    .course-card:hover {
+        transform: translateY(-5px); 
+        box-shadow: 0 8px 15px rgba(0, 255, 153, 0.15);
+    }
+    
+    /* About Section Adjustments */
+    .about-content p {
+        font-size: 1rem;
+    }
+}
+
+/* Animation for the loading spinner in the payment modal */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

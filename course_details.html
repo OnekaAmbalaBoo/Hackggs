@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details | AI Productivity for Students</title>
+    <link rel="stylesheet" href="style.css"> 
+    <style>
+        /* Specific CSS for the Course Details Layout */
+        body {
+            /* Enables continuous scroll and dark background across the viewport */
+            height: auto; 
+            overflow-y: auto; 
+            background-color: var(--background-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px; 
+        }
+
+        /* Video background implementation for the detail page */
+        #checkout-video {
+            position: fixed; 
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -2; 
+            transform: translateX(-50%) translateY(-50%);
+            object-fit: cover;
+            opacity: 0.8; 
+        }
+
+        /* Header bar for consistency */
+        .page-header {
+            width: 100%;
+            padding: 20px 5vw;
+            background-color: rgba(18, 18, 18, 0.9);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .page-header a {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* --- MAIN CONTENT LAYOUT --- */
+        .details-wrapper {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            max-width: 1200px;
+            width: 95%;
+            margin-top: 50px; 
+            margin-bottom: 50px;
+            backdrop-filter: blur(2px);
+        }
+        
+        /* LEFT COLUMN: DETAILS & VISUALS */
+        .details-column {
+            flex: 2;
+            padding: 30px;
+            background-color: rgba(26, 26, 26, 0.95);
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 255, 153, 0.1);
+        }
+
+        .details-header {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        
+        .details-header h1 {
+            color: var(--primary-color);
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            margin-bottom: 10px;
+            border-bottom: 2px solid rgba(0, 255, 153, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .visual-placeholder {
+            width: 100%;
+            height: 350px;
+            margin: 20px 0 30px;
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            border: 3px dashed var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            border-radius: 8px;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .module-card {
+            background-color: #222;
+            padding: 20px;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 6px;
+        }
+
+        .module-card h3 {
+            color: var(--text-light);
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .module-card ul {
+            list-style-type: none;
+            padding-left: 0;
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        .module-card li {
+            padding: 3px 0;
+            border-bottom: 1px dotted rgba(255, 255, 255, 0.05);
+        }
+
+        .visual-demo {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .visual-demo h3 {
+            color: var(--warning-color);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .visual-demo .video-placeholder {
+            width: 100%;
+            height: 400px;
+            background-color: #000;
+            border: 2px dashed var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 1.2rem;
+        }
+
+        /* RIGHT COLUMN: CHECKOUT STICKY BAR */
+        .checkout-column {
+            flex: 1; 
+            position: sticky; 
+            top: 20px; 
+            align-self: flex-start;
+            
+            padding: 25px;
+            background-color: var(--background-dark);
+            border: 2px solid var(--warning-color);
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(255, 153, 0, 0.3);
+            text-align: center;
+            height: fit-content; 
+        }
+
+        .price-box {
+            background-color: rgba(0, 255, 153, 0.1);
+            border: 1px solid var(--primary-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .price-box h4 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+
+        .price-box .old-price {
+            color: #ff3333;
+            text-decoration: line-through;
+            margin-right: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .price-box .discount-info {
+            color: var(--warning-color);
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .buy-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 30px;
+            background-color: var(--primary-color);
+            color: var(--background-dark);
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: pulse-buy 1.5s infinite alternate; 
+        }
+
+        @keyframes pulse-buy {
+            from { box-shadow: 0 0 10px var(--primary-color); }
+            to { box-shadow: 0 0 25px var(--primary-color), 0 0 5px var(--primary-color); }
+        }
+
+        .checkout-features {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .checkout-features li {
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            font-weight: 500;
+        }
+        
+        .checkout-features li::before {
+            content: '\2714'; /* Checkmark symbol */
+            color: var(--primary-color);
+            margin-right: 10px;
+            font-weight: 900;
+        }
+        
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 900px) {
+            .details-wrapper {
+                flex-direction: column;
+                margin-top: 80px;
+                gap: 20px;
+            }
+            
+            .checkout-column {
+                position: relative; /* Disable sticky on mobile */
+                top: auto;
+                align-self: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <video autoplay loop muted playsinline id="checkout-video" poster="video-poster.jpg">
+        <source src="hero-bg-video.mp4" type="video/mp4">
+    </video>
+
+    <header class="main-header" style="position: fixed; width: 100%; top: 0; z-index: 100;">
+        <a href="index.html" class="logo">AI **HACKS**</a>
+    </header>
+
+    <div class="details-wrapper">
+        
+        <div class="details-column">
+            <div class="details-header">
+                <p style="color:var(--warning-color); font-weight:700;">HACK 1: BEGINNER TO INTERMEDIATE</p>
+                <h1>AI Productivity for Students</h1>
+                <p style="color:#ddd;">Go beyond basic prompts. Learn the advanced techniques and automation secrets to turn ChatGPT and other tools into a tireless academic assistant, instantly boosting your performance and freeing up 70% of your time.</p>
+            </div>
+            
+            <div class="visual-demo">
+                <h3>See The Results: Watch the 10-Minute PPT Hack</h3>
+                <div class="visual-placeholder">
+                    [Placeholder for Course Video Demo or Interactive Image]
+                </div>
+            </div>
+
+            <div class="module-list-group">
+                <h3>MODULE BREAKDOWN</h3>
+                <div class="modules-grid">
+                    
+                    <div class="module-card">
+                        <h3>⚡ Level 1: Welcome to the Edge</h3>
+                        <ul>
+                            <li>Learn how to cut through chaos and make AI your secret weapon.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="module-card">
+                        <h3>🧠 Level 2: Talk to GPT Like a Boss</h3>
+                        <ul>
+                            <li>Master the art of custom prompts and create your own personal assistant.</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3>🎞️ Level 3: The 10-Minute PPT Hack</h3>
+                        <ul>
+                            <li>From topic &rarr; slides &rarr; visuals in under 10 minutes.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="module-card">
+                        <h3>📘 Level 4: Assignment Automation 101</h3>
+                        <ul>
+                            <li>Build essays that sound human and grade-ready.</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3>🎨 Level 5: Visual Identity & Portfolios</h3>
+                        <ul>
+                            <li>Turn AI text into stunning Canva visuals and create your portfolio.</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3>🔮 Level 6: Bonus Hacks: Time & Mind</h3>
+                        <ul>
+                            <li>Smart AI tools for notes, flashcards, and routines.</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-card">
+                        <h3>🚀 Level 7: Wrap Up: The Edge Mindset</h3>
+                        <ul>
+                            <li>Future-ready mindset + final recap.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="color:var(--primary-color); font-weight:700; margin-top: 20px;">BONUS: ENROLL TODAY and get a lifetime license to our Free Portfolio Website template!</p>
+        </div>
+
+        <div class="checkout-column">
+            <div class="price-box" style="text-align: center;">
+                <p style="color:var(--warning-color); font-weight:700; font-size:1.1rem;">LIMITED-TIME OFFER</p>
+                <h4>₹200 <span class="old-price">₹3000</span></h4>
+                <p style="color:#ddd; font-size:0.9rem;">(That's a 93% Discount during launch window.)</p>
+            </div>
+            
+            <ul class="checkout-features">
+                <li>Instant Access to All 7 Levels + Bonuses</li>
+                <li>Lifetime Updates to Prompt Library</li>
+                <li>Private Community Discord Access</li>
+                <li>Bonus: Canva Template Vault (100+ templates)</li>
+                <li>**FREE Custom Portfolio Website Template**</li>
+            </ul>
+
+            <a href="course_checkout.html" class="buy-button">
+                YES! PROCEED TO SECURE CHECKOUT &rarr;
+            </a>
+            
+            <p style="text-align: center; color: #777; font-size: 0.9rem; margin-top: 15px;">30-Day Money-Back Guarantee. Start mastering AI risk-free.</p>
+        </div>
+        
+    </div>
+    
+    <a href="index.html" style="color: #ccc; margin-bottom: 20px; text-decoration: none;">&larr; Back to Home Page</a>
+
+</body>
+</html>
